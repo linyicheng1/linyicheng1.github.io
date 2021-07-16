@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="非线性非高斯系统的状态估计"><meta name="keywords" content=""><meta name="author" content="linyicheng"><meta name="copyright" content="linyicheng"><title>非线性非高斯系统的状态估计 | 木独小站</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E7%9A%84%E9%80%92%E5%BD%92%E4%BC%B0%E8%AE%A1%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">离散时间的递归估计问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.2.</span> <span class="toc-text">贝叶斯滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.3.</span> <span class="toc-text">扩展卡尔曼滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%BF%E4%B9%89%E9%AB%98%E6%96%AF%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.4.</span> <span class="toc-text">广义高斯滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E6%89%A9%E5%B1%95%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.5.</span> <span class="toc-text">迭代扩展卡尔曼滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8EMAP%E8%A7%92%E5%BA%A6%E7%9C%8BIEKF"><span class="toc-number">1.6.</span> <span class="toc-text">从MAP角度看IEKF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%B0%86PDF%E4%BC%A0%E5%85%A5%E9%9D%9E%E7%BA%BF%E6%80%A7%E5%87%BD%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">1.7.</span> <span class="toc-text">其他将PDF传入非线性函数的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.8.</span> <span class="toc-text">粒子滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sigma-point-%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.9.</span> <span class="toc-text">sigma point 卡尔曼滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3-sigmapoint-%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.10.</span> <span class="toc-text">迭代 sigmapoint 卡尔曼滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ISPKF%E4%B8%8E%E5%90%8E%E9%AA%8C%E5%9D%87%E5%80%BC"><span class="toc-number">1.11.</span> <span class="toc-text">ISPKF与后验均值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">1.12.</span> <span class="toc-text">滤波器的分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E7%9A%84%E9%80%92%E5%BD%92%E4%BC%B0%E8%AE%A1%E9%97%AE%E9%A2%98-1"><span class="toc-number">2.</span> <span class="toc-text">离散时间的递归估计问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E5%90%8E%E9%AA%8C%E4%BC%B0%E8%AE%A1"><span class="toc-number">2.1.</span> <span class="toc-text">最大后验估计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%8E%A8%E6%96%AD"><span class="toc-number">2.2.</span> <span class="toc-text">贝叶斯推断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="toc-number">2.3.</span> <span class="toc-text">最大似然估计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E7%BB%AD%E6%97%B6%E9%97%B4%E7%9A%84%E9%80%92%E5%BD%92%E4%BC%B0%E8%AE%A1%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">连续时间的递归估计问题</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">linyicheng</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">9</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">2</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">木独小站</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">非线性非高斯系统的状态估计</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-18</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%8A%B6%E6%80%81%E4%BC%B0%E8%AE%A1/">机器人学中的状态估计</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>主要内容</p>
+<ul>
+<li>离散时间的递归估计问题</li>
+<li>离散时间的批量估计问题</li>
+<li>连续时间的批量估计问题<span id="more"></span>
+<h2 id="离散时间的递归估计问题"><a href="#离散时间的递归估计问题" class="headerlink" title="离散时间的递归估计问题"></a>离散时间的递归估计问题</h2><h3 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h3>$$<br>\begin{aligned}<br>运动方程：x_k &amp;= f(x_{k-1},v_k,w_k),\quad k=1\cdots K \\<br>观测方程：y_k &amp;= g(x_k,n_k),\quad k = 0\cdots K<br>\end{aligned}<br>$$</li>
+<li>马尔可夫性：未来状态的条件概率分布仅依赖于当前状态<br>$$<br>p(x_{k+1}|x_{0:k}) = p(x_{k+1}|x_k)<br>$$</li>
+<li>对于线性系统具有马尔可夫性，对于非线性系统近似的认为也具有马尔可夫性，由此可推导出递归的滤波器形式。</li>
+</ul>
+<h3 id="贝叶斯滤波"><a href="#贝叶斯滤波" class="headerlink" title="贝叶斯滤波"></a>贝叶斯滤波</h3><ul>
+<li><p>使用过去和当前的测量，构造一个完整的PDF来刻画当前状态<br>$$<br>p(x_k|\check{x}<em>0,v</em>{1:k},y_{0:k})<br>$$</p>
+</li>
+<li><p>将最新的观测分解出来<br>$$<br>p(x_k|\check{x}<em>0,v</em>{1:k},y_{0:k}) = \eta p(y_k|x_k)p(x_k|\check{x}<em>0,v</em>{1:k},y_{0:k-1}) \tag{贝叶斯公式+观测独立性}<br>$$</p>
+</li>
+<li><p>对第二个因子进行展开<br>$$<br>\begin{aligned}<br>p(x_k|\check{x}<em>0,v</em>{1:k},y_{0:k-1}) = \int p(x_k,x_{k-1}|\check{x}<em>0,v</em>{1:k},y_{0:k-1}) d x_{k-1} \\<br>= \int p(x_k|x_{k-1},\check{x}<em>0,v</em>{1:k},y_{0:k-1}) p(x_{k-1}|\check{x}<em>0,v</em>{1:k},y_{0:k-1}) d x_{k-1}  \tag{全概率公式+条件概率定义}<br>\end{aligned}<br>$$</p>
+</li>
+<li><p>引入马尔可夫性的假设<br>$$<br>\begin{aligned}<br>p(x_k|x_{k-1},\check{x}<em>0,v</em>{1:k},y_{0:k-1}) &amp;= p(x_k|x_{k-1},v_k) \\<br>p(x_{k-1}|\check{x}<em>0,v</em>{1:k},y_{0:k-1}) &amp;= p(x_{k-1}|\check{x}<em>0,v</em>{1:k-1},y_{0:k-1})<br>\end{aligned}<br>$$</p>
+</li>
+<li><p>带回原公式，得到贝叶斯滤波器<br><img src="https://storage.live.com/items/24342272185BBA7E!3762?authkey=AJzdbBYZIQ_AuAo"></p>
+</li>
+<li><p>最后得到贝叶斯滤波器的流程<br><img src="https://storage.live.com/items/24342272185BBA7E!3763?authkey=AJzdbBYZIQ_AuAo"></p>
+</li>
+</ul>
+<p>讨论</p>
+<ol>
+<li>贝叶斯滤波器比较精确，但仅仅是一个精美的数学产物，除了线性高斯的情况外，在实际中它基本不可能实现。</li>
+<li>概率密度函数难以表达</li>
+<li>计算积分十分耗时</li>
+<li>使用了马尔科夫性的假设</li>
+</ol>
+<h3 id="扩展卡尔曼滤波"><a href="#扩展卡尔曼滤波" class="headerlink" title="扩展卡尔曼滤波"></a>扩展卡尔曼滤波</h3><ul>
+<li>假设噪声是高斯分布</li>
+<li>对运动模型和观测模型进行线性化</li>
+<li>对于轻度非线性非高斯系统，其往往是有效的</li>
+</ul>
+<p>首先对原系统做出如下假设</p>
+<ul>
+<li>$x_k$的置信函数限制为高斯分布<br>$$<br>p(x_k|\check{x}<em>0,v</em>{1:k},y_{0:k}) = N(\hat{x}_k,\hat{P}_k)<br>$$</li>
+<li>噪声变量也是高斯分布<br>$$<br>w_k \sim N(0,Q_k) \qquad<br>n_k \sim N(0,R_k) \quad \forall k<br>$$</li>
+</ul>
+<p>对运动模型和观测模型进行线性化<br>$$<br>\begin{aligned}<br>f(x_{k-1},v_k,w_k) &amp;\approx \check{x}<em>k + F</em>{k-1}(x_{k-1}-\hat{x}_{k-1}) + w_k^{‘}\\<br>g(x_k,n_k) &amp;\approx \check{y}_k + G_k(x_k - \check{x}_k) + n_k^{‘}<br>\end{aligned}<br>$$<br><img src="https://storage.live.com/items/24342272185BBA7E!3783?authkey=AJzdbBYZIQ_AuAo"></p>
+<ul>
+<li><p>先验状态$x_k$的统计学特性为<br>$$<br>x_k \approx \check{x}<em>k + F</em>{k-1}(x_{k-1}-\hat{x}<em>{k-1})+w^{‘}<em>k<br>$$<br>$$<br>E(x_k) \approx \check{x}<em>k + F</em>{k-1}(x</em>{k-1}-\hat{x}</em>{k-1}) + \underbrace{E[w^{‘}<em>k]}</em>{0}<br>$$<br>$$<br>E[(x_k-E[x_k])(x_k-E[x_k])^T] \approx \underbrace{E[w_k^{‘}w_k^{‘^T}]}<em>{Q_k^{‘}}<br>$$<br>$$<br>p(x_k|x</em>{k-1},v_k) \approx N(\check{x}<em>k+F</em>{k-1}(x_{k-1}-\hat{x}_{k-1}),Q_k^{‘})<br>$$</p>
+</li>
+<li><p>给定当前状态，则当前观测$y_k$的统计学特性为<br>$$<br>y_k \approx \check{y}_k + G_k (x_k - \check{x}_k) + n_k^{‘}<br>$$<br>$$<br>E[y_k] = \check{y}<em>k + G_k (x_k - \check{x}<em>k) + \underbrace{E[n_k^{‘}]}</em>{0}<br>$$<br>$$<br>E[(y_k-E[y_k])(y_k-E[y_k])^T] = \underbrace{E[n_k^{‘}n_k^{‘^T}]}</em>{R^{‘}_k}<br>$$<br>$$<br>p(y_k|x_k) \approx N(\check{y}_k+G_k(x_k-\hat{x}_k),R_k^{‘})<br>$$</p>
+</li>
+<li><p>带入到贝叶斯滤波器中<br><img src="https://storage.live.com/items/24342272185BBA7E!3784?authkey=AJzdbBYZIQ_AuAo"></p>
+</li>
+<li><p>高斯分布的积分仍是高斯的</p>
+</li>
+</ul>
+<ul>
+<li><p>计算归一化积</p>
+</li>
+<li><p>最终得到EKF的表达式</p>
+</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>EKF不能保证在一般的非线性系统中能够充分的发挥作用</li>
+<li>在估计点线性化而非真实状态处，可能导致在强非线性情况下发散</li>
+<li>即使EKF没有明显异常，但估计值常常是有偏差和不一致的</li>
+</ul>
+<h3 id="广义高斯滤波"><a href="#广义高斯滤波" class="headerlink" title="广义高斯滤波"></a>广义高斯滤波</h3><p>考虑贝叶斯滤波器</p>
+<p><img src="https://storage.live.com/items/24342272185BBA7E!3762?authkey=AJzdbBYZIQ_AuAo"></p>
+<ul>
+<li>假设估计的状态是高斯的，推导出一些更好的结论</li>
+</ul>
+<h3 id="迭代扩展卡尔曼滤波"><a href="#迭代扩展卡尔曼滤波" class="headerlink" title="迭代扩展卡尔曼滤波"></a>迭代扩展卡尔曼滤波</h3><h3 id="从MAP角度看IEKF"><a href="#从MAP角度看IEKF" class="headerlink" title="从MAP角度看IEKF"></a>从MAP角度看IEKF</h3><h3 id="其他将PDF传入非线性函数的方法"><a href="#其他将PDF传入非线性函数的方法" class="headerlink" title="其他将PDF传入非线性函数的方法"></a>其他将PDF传入非线性函数的方法</h3><h3 id="粒子滤波"><a href="#粒子滤波" class="headerlink" title="粒子滤波"></a>粒子滤波</h3><h3 id="sigma-point-卡尔曼滤波"><a href="#sigma-point-卡尔曼滤波" class="headerlink" title="sigma point 卡尔曼滤波"></a>sigma point 卡尔曼滤波</h3><h3 id="迭代-sigmapoint-卡尔曼滤波"><a href="#迭代-sigmapoint-卡尔曼滤波" class="headerlink" title="迭代 sigmapoint 卡尔曼滤波"></a>迭代 sigmapoint 卡尔曼滤波</h3><h3 id="ISPKF与后验均值"><a href="#ISPKF与后验均值" class="headerlink" title="ISPKF与后验均值"></a>ISPKF与后验均值</h3><h3 id="滤波器的分类"><a href="#滤波器的分类" class="headerlink" title="滤波器的分类"></a>滤波器的分类</h3><h2 id="离散时间的递归估计问题-1"><a href="#离散时间的递归估计问题-1" class="headerlink" title="离散时间的递归估计问题"></a>离散时间的递归估计问题</h2><h3 id="最大后验估计"><a href="#最大后验估计" class="headerlink" title="最大后验估计"></a>最大后验估计</h3><h3 id="贝叶斯推断"><a href="#贝叶斯推断" class="headerlink" title="贝叶斯推断"></a>贝叶斯推断</h3><h3 id="最大似然估计"><a href="#最大似然估计" class="headerlink" title="最大似然估计"></a>最大似然估计</h3><h2 id="连续时间的递归估计问题"><a href="#连续时间的递归估计问题" class="headerlink" title="连续时间的递归估计问题"></a>连续时间的递归估计问题</h2><p>（后面再学）</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">linyicheng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2020/12/18/非线性非高斯系统的状态估计/">http://example.com/2020/12/18/非线性非高斯系统的状态估计/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/12/22/%E7%9F%A9%E9%98%B5%E6%9D%8E%E7%BE%A4/"><i class="fa fa-chevron-left">  </i><span>矩阵李群</span></a></div><div class="next-post pull-right"><a href="/2020/12/18/%E5%87%B8%E9%9B%86/"><span>凸集</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By linyicheng</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

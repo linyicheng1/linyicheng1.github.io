@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="迭代最近点（Iterative Closest Point, ICP）算法"><meta name="keywords" content=""><meta name="author" content="linyicheng"><meta name="copyright" content="linyicheng"><title>迭代最近点（Iterative Closest Point, ICP）算法 | 木独小站</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E8%A7%A3%E7%90%86%E8%AE%BA"><span class="toc-number">2.</span> <span class="toc-text">求解理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SVD%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">SVD方法</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">linyicheng</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">9</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">2</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">木独小站</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">迭代最近点（Iterative Closest Point, ICP）算法</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-07</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>迭代最近点（Iterative Closest Point, ICP）算法是最常见的点云匹配算法。</p>
+<h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><p><strong>输入</strong>：两组点云$P$ $Q$<br><strong>输出</strong>：点云之间的坐标变换关系 $R,t$,满足如下条件<br>$$<br>p_i = Rq_i+t \quad p_i\in P, q_i\in Q<br>$$<br>最小化目标函数：<br>$$<br>\frac{1}{2} \Sigma_{i=1}^{n}|q_i-Rp_i-t|^2<br>$$<br><strong>注意：$q_i$和$p_i$不总是同一个点</strong></p>
+<span id="more"></span>
+<h2 id="求解理论"><a href="#求解理论" class="headerlink" title="求解理论"></a>求解理论</h2><ul>
+<li>SVD方法</li>
+<li>非线性优化方法<h3 id="SVD方法"><a href="#SVD方法" class="headerlink" title="SVD方法"></a>SVD方法</h3></li>
+</ul>
+<ol>
+<li><p>计算两组点云的质心（center of mass)<br>$$<br>\mu_p = \frac{1}{N_p} \Sigma_{i=i}^{N_p} p_i \quad<br>\mu_q = \frac{1}{N_q} \Sigma_{i=1}^{N_q} q_i<br>$$</p>
+</li>
+<li><p>计算去除中心后的点云<br>$$<br>p^{‘}_i = p_i - \mu_p \quad<br>q^{‘}_i = q_i - \mu_q<br>$$</p>
+</li>
+<li><p>计算待求解矩阵,并计算SVD分解<br>$$W = \Sigma_{i=1}^{N_p} p^{‘}_i q^{‘T}_i =U<br>\left[\begin{array}{c c c}<br> \sigma_1 &amp; 0 &amp; 0 \\<br> 0 &amp; \sigma_2 &amp; 0 \\<br> 0 &amp; 0 &amp; \sigma_3<br>\end{array}\right]<br>V^T<br>$$</p>
+</li>
+<li><p>得到最终解<br>$$<br>R = VU^T \qquad<br>t = \mu_q - R\mu_p<br>$$</p>
+</li>
+</ol>
+<p><strong>证明：</strong><br>SVD分解求解的思路在于：</p>
+<ol>
+<li>求出平移无关的分量</li>
+<li>使用SVD分解求得旋转变换的分量</li>
+<li>由旋转分量直接得到平移部分$\to t = \mu_q - R\mu_p$</li>
+</ol>
+<p>因此证明分为两个部分：</p>
+<ul>
+<li>证明$p^{‘}_i,q^{‘}_i$之间的转换关系仅与R相关</li>
+<li>证明$R = VU^T$</li>
+</ul>
+<p><strong>第一部分：</strong><br><img src="https://storage.live.com/items/24342272185BBA7E!3226?authkey=AJzdbBYZIQ_AuAo"><br><strong>第二部分：</strong><br><img src="https://storage.live.com/items/24342272185BBA7E!3227?authkey=AJzdbBYZIQ_AuAo"></p>
+<p><strong>实际情况：未知对应点的求解</strong></p>
+<ul>
+<li>寻找最近邻的对应点</li>
+<li>计算R,t</li>
+<li>对点云进行转换，计算误差</li>
+<li>不断迭代，直到误差小于某一个值<br><img src="https://storage.live.com/items/24342272185BBA7E!3225?authkey=AJzdbBYZIQ_AuAo" alt="迭代匹配"></li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">linyicheng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2020/12/07/ICP/">http://example.com/2020/12/07/ICP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/12/07/SLAM%E6%A6%82%E8%BF%B0/"><i class="fa fa-chevron-left">  </i><span>SLAM概述</span></a></div><div class="next-post pull-right"><a href="/2020/12/07/%E6%A6%82%E7%8E%87%E8%AE%BA%E5%9F%BA%E7%A1%80/"><span>概率论基础</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By linyicheng</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
